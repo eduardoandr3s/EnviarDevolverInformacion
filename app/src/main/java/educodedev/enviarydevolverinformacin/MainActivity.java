@@ -24,9 +24,11 @@ import educodedev.enviarydevolverinformacin.modelos.Usuario;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText  txtEmail,txtPassword;
+    private EditText txtEmail, txtPassword;
     private Button btnEnviar, btnCrearDir;
     private final int DIRECCIONES = 123;
+
+    // 2. RECIBIR EN LA PRIMERA DESDE LA SEGUNDA
     private ActivityResultLauncher<Intent> launcherDirecciones;
 
     @Override
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         inicializarVistas();
+
+        // 2. RECIBIR EN LA PRIMERA DESDE LA SEGUNDA
         inicializarLaunchers();
 
         btnEnviar.setOnClickListener(new View.OnClickListener() {
@@ -43,12 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
                 String email = txtEmail.getText().toString();
                 String password = txtPassword.getText().toString();
-                Usuario usuario = new Usuario(email,password);
+                Usuario usuario = new Usuario(email, password);
+
+                // ENVIAR DESDE LA PRIMERA A LA SEGUNDA
                 Intent intent = new Intent(MainActivity.this, DesencriptarActivity.class);
                 Bundle bundle = new Bundle(); //Para meter valores y meterlos en otra actividad
                 bundle.putSerializable("USER", usuario);
                 intent.putExtras(bundle); // meter mis valores en el intent
-                startActivity(intent);
+                startActivity(intent);  // ARRANCA LA ACTIVIDAD
+
+                //RECIBIR DATOS EN LA PRIMERA DESDE LA SEGUNDA
             }
         });
 
@@ -56,33 +64,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CreateDirActivity.class);
-              //  startActivityForResult(intent,DIRECCIONES);
-            launcherDirecciones.launch(intent);
-
-
+                //  startActivityForResult(intent,DIRECCIONES);
+                launcherDirecciones.launch(intent);
 
 
             }
         });
     }
 
+
+    // 2. RECIBIR DE LA PRIMERA DESDE LA SEGUNDA
     private void inicializarLaunchers() {
-        
+
         launcherDirecciones = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult o) {
-                if (o.getResultCode() == RESULT_OK){
+                if (o.getResultCode() == RESULT_OK) {
 
-                    if (o.getData()!=null){
+                    if (o.getData() != null) {
 
                         Bundle bundle = o.getData().getExtras();
                         Direccion dir = (Direccion) bundle.getSerializable("DIR");
                         Toast.makeText(MainActivity.this, dir.toString(), Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         Toast.makeText(MainActivity.this, "NO HAY DATOS", Toast.LENGTH_SHORT).show();
 
                     }
-                }else{
+                } else {
                     Toast.makeText(MainActivity.this, "VENTANA CANCELADA", Toast.LENGTH_SHORT).show();
 
                 }
@@ -90,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        
+
     }
 
     private void inicializarVistas() {
@@ -106,20 +114,20 @@ public class MainActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == DIRECCIONES){
+        if (requestCode == DIRECCIONES) {
 
-            if (resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
 
-                if (data!=null){
+                if (data != null) {
 
                     Bundle bundle = data.getExtras();
                     Direccion dir = (Direccion) bundle.getSerializable("DIR");
                     Toast.makeText(this, dir.toString(), Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     Toast.makeText(this, "NO HAY DATOS", Toast.LENGTH_SHORT).show();
 
                 }
-            }else{
+            } else {
                 Toast.makeText(this, "VENTANA CANCELADA", Toast.LENGTH_SHORT).show();
 
             }

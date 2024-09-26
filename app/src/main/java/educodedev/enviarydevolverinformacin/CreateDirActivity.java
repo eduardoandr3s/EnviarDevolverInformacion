@@ -33,6 +33,8 @@ btnCrear.setOnClickListener(new View.OnClickListener() {
 
         Direccion direccion = new Direccion(calle, numero, ciudad);
 
+
+        // 2. ENVIAR DESDE LA SEGUNDA A LA PRIMERA
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putSerializable("DIR", direccion);
